@@ -14,6 +14,8 @@ public class Employee {
         this.date = date;
     }
 
+    public Employee(){}
+
     private Integer id;
     private String lastName;
     private String email;

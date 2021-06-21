@@ -1,7 +1,7 @@
 package com.merciless.controller;
 
-import com.merciless.dao.DepartmentDao;
-import com.merciless.dao.EmployeeDao;
+import com.merciless.mapper.DepartmentMapper;
+import com.merciless.mapper.EmployeeMapper;
 import com.merciless.pojo.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +16,10 @@ import java.util.Collection;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeMapper employeeDao;
 
     @Autowired
-    private DepartmentDao departmentDao;
+    private DepartmentMapper departmentDao;
 
     @GetMapping("/emps")
     public String list(Model model){
@@ -38,8 +38,8 @@ public class EmployeeController {
 
     @PostMapping("/emp/add")
     public String addToDao(Employee employee){
-        System.out.println(employee.toString());
         employeeDao.save(employee);
+        System.out.println(employee.getDate());
         return "redirect:/emps";
     }
 
@@ -47,13 +47,19 @@ public class EmployeeController {
     public String update(@RequestParam("id") Integer id, Model model){
         Employee employee = employeeDao.getEmployeeById(id);
         model.addAttribute("emp", employee);
-        return "emp/list";
+        model.addAttribute("departments", departmentDao.getDepartments());
+        return "emp/update";
+    }
+
+    @ PostMapping("/emp/update")
+    public String updateEmp(Employee employee){
+        employeeDao.update(employee);
+        return "redirect:/emps";
     }
 
     @GetMapping("/emp/delete")
     public String delete(@RequestParam("id") Integer id, Model model){
-        return "emp/list";
+        employeeDao.delete(id);
+        return "redirect:/emps";
     }
-
-
 }

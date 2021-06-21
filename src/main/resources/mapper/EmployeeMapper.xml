@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merciless.mapper.EmployeeMapper">
+
+
+    <select id="getAll" resultMap="Employee">
+        select * from employees
+    </select>
+
+    <select id="getEmployeeById" resultMap="Employee" useCache="true">
+        select * from employees where id = #{id}
+    </select>
+
+    <resultMap id="Employee" type="Employee">
+        <association property="department" column="departmentID" javaType="Department" select="getDepartment"/>
+    </resultMap>
+    <select id="getDepartment" parameterType="int" resultType="Department">
+        select * from departments where id = #{departmentID}
+    </select>
+    <select id="delete" parameterType= "int">
+        select * from employees
+    </select>
+    <select id="save" parameterType="Employee">
+        INSERT INTO employees (lastname, email,gender, date, departmentid) VALUES(#{id}, #{email}, #{gender}, #{date}, #{department.id})
+    </select>
+
+    <select id="update" parameterType="Employee">
+        UPDATE employees set lastname=#{lastName}, email=#{email}, gender=#{gender}, date=#{date}, departmentid=#{department.id} where id=#{id}
+    </select>
+
+</mapper>
